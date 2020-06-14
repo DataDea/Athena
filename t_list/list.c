@@ -100,31 +100,81 @@ list *listInsertNode(list *list, listNode *old_node, void *value, int after) {
         return NULL;
     }
     newNode->value = value;
-    if (after > 0) {
-        newNode->next = old_node;
-        if (NULL == old_node->pre) {
-            //可能是头节点
-            newNode->next = old_node;
-            newNode->pre = NULL;
-            list->head = newNode;
-        } else {
-            newNode->pre = old_node->pre;
-            old_node->pre->next = newNode;
-            old_node->pre = newNode;
+//    if (after > 0) {
+//        newNode->next = old_node;
+//        if (NULL == old_node->pre) {
+//            //可能是头节点
+//            newNode->next = old_node;
+//            newNode->pre = NULL;
+//            list->head = newNode;
+//        } else {
+//            newNode->pre = old_node->pre;
+//            old_node->pre->next = newNode;
+//            old_node->pre = newNode;
+//        }
+//    } else {
+//        old_node->next = newNode;
+//        if (NULL == old_node->next) {
+//            //尾部节点
+//            newNode->pre = old_node;
+//            newNode->next = NULL;
+//            list->tail = newNode;
+//        } else {
+//            newNode->pre = old_node;
+//            newNode->next = old_node->next;
+//            old_node->next->pre = newNode;
+//        }
+//    }
+    if (after) {
+        //after不等于零表示插在节点的后面
+        newNode->pre = old_node;
+        newNode->next = old_node->next;
+        if (list->tail == old_node) {
+            list->tail = newNode;
         }
     } else {
-        old_node->next = newNode;
-        if (NULL == old_node->next) {
-            //尾部节点
-            newNode->pre = old_node;
-            newNode->next = NULL;
-            list->tail = newNode;
-        } else {
-            newNode->pre = old_node;
-            newNode->next = old_node->next;
-            old_node->next->pre = newNode;
+        newNode->next = old_node;
+        newNode->pre = old_node->pre;
+        if (list->head == old_node) {
+            list->head = newNode;
         }
+    }
+    //更新相邻节点的前后指针
+    if (newNode->pre != NULL) {
+        newNode->pre->next = newNode;
+    }
+    if (newNode->next != NULL) {
+        newNode->next->pre = newNode;
     }
     list->lens++;
     return list;
+}
+
+//删除指定的节点
+void listDelNode(list *list, listNode *node) {
+    unsigned long lens = list->lens;
+    if (lens == 0) {
+        return;
+    }
+    if (node->pre != NULL) {
+        node->pre->next = node->next;
+    } else {
+        list->head = node->next;
+    }
+    if (node->next != NULL) {
+        node->next->pre = node->pre;
+    } else {
+        list->tail = node;
+    }
+
+    if (list->free) {
+        list->free(node->value);
+    }
+    free(node);
+    list->lens--;
+}
+
+//创建一个迭代器
+list_iterator *listGetIterator(list *list, int direction) {
+
 }
