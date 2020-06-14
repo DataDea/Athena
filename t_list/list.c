@@ -176,5 +176,23 @@ void listDelNode(list *list, listNode *node) {
 
 //创建一个迭代器
 list_iterator *listGetIterator(list *list, int direction) {
-
+    unsigned long lens;
+    lens = list->lens;
+    if (lens == 0) {
+        return NULL;
+    }
+    list_iterator *iterator;
+    if ((iterator = malloc(sizeof(*iterator))) == NULL) {
+        return NULL;
+    }
+    if (direction) {
+        //从头
+        iterator->direction = LIST_START_HEAD;
+        iterator->next = list->head;
+    } else {
+        //从尾
+        iterator->direction = LIST_START_TAIL;
+        iterator->next = list->tail;
+    }
+    return iterator;
 }
