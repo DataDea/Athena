@@ -259,4 +259,47 @@ list *listDup(list *orig) {
     return copy;
 }
 
+//节点查找功能
+listNode *listSearchKey(list *list, void *key) {
+
+    list_iterator *iterator;
+    listNode *find = NULL;
+    if ((iterator = listGetIterator(list, LIST_START_HEAD)) == NULL) {
+        return NULL;
+    }
+    while ((find = listNext(iterator)) != NULL) {
+        if (list->match != NULL) {
+            if (list->match(find->value, key)) {
+                //释放内存
+                listReleaseIterator(iterator);
+                return find;
+            }
+        } else {
+            if (find->value == key) {
+                listReleaseIterator(iterator);
+                return find;
+            }
+        }
+    }
+    //及时没找到，也要释放内存
+    listReleaseIterator(iterator);
+    return find;
+}
+
+//去对应索引位置的节点
+listNode *listIndex(list *list, long index) {
+    listNode *find;
+
+    //index小于零时从表尾开始找
+    if (index < 0) {
+        index = (-index) - 1;
+        find = LIST_TAIL(list);
+        while (index-- && find != NULL) find = find->pre;
+    } else {
+        //从表头开始中
+        find = LIST_FIRST(list);
+        while (index-- && find != NULL) find = find->next;
+    }
+    return find;
+}
 
