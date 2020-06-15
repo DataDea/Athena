@@ -196,3 +196,67 @@ list_iterator *listGetIterator(list *list, int direction) {
     }
     return iterator;
 }
+
+//迭代器的下一个元素
+listNode *listNext(list_iterator *iter) {
+    listNode *current = iter->next;
+    if (current != NULL) {
+        if (iter->direction) {
+            iter->next = current->next;
+        } else {
+            iter->next = current->pre;
+        }
+    }
+    return current;
+}
+
+//释放迭代器
+void listReleaseIterator(list_iterator *iter) {
+    free(iter);
+}
+
+//复制整个链表
+list *listDup(list *orig) {
+
+    list *copy;
+    list_iterator *iterator;
+    listNode *current;
+
+    if ((copy = listCreate()) == NULL) {
+        return NULL;
+    }
+    copy->free = orig->free;
+    copy->match = orig->match;
+    copy->dup = orig->dup;
+
+    //创建迭代器
+    if ((iterator = listGetIterator(orig, LIST_START_HEAD)) == NULL) {
+        return NULL;
+    }
+
+    //迭代器遍历原始的链表添加到新的链表里
+    while ((current = listNext(iterator)) != NULL) {
+        void *value;
+        if (copy->dup) {
+            if ((value = copy->dup(current->value)) == NULL) {
+                //释放内存
+                listRelease(copy);
+                listReleaseIterator(iterator);
+                return NULL;
+            }
+        } else {
+            value = current->value;
+        }
+        if (listAddNodeTail(copy, value) == NULL) {
+            listRelease(copy);
+            listReleaseIterator(iterator);
+            return NULL;
+        }
+    }
+    //释放内存
+    free(iterator);
+    //返回副本
+    return copy;
+}
+
+
