@@ -303,3 +303,33 @@ listNode *listIndex(list *list, long index) {
     return find;
 }
 
+//将迭代器的方向设置为 LIST_START_HEAD 并将迭代指针重新指向表头节点
+void listRewindHead(list *list, list_iterator *iterator) {
+    iterator->next = list->head;
+    iterator->direction = LIST_START_HEAD;
+}
+
+//将迭代器的方向设置为 LIST_START_TAIL 并将迭代指针重新指向表头节点
+void listRewindTail(list *list, list_iterator *iterator) {
+    iterator->next = list->tail;
+    iterator->direction = LIST_START_TAIL;
+}
+
+//取出链表的表尾节点，并将它移动到表头，成为新的表头节点
+void listRotate(list *list) {
+    unsigned long lens = list->lens;
+    if (lens <= 1) {
+        return;
+    }
+    //取出表未几点
+    listNode *last = list->tail;
+    list->tail = last->pre;
+    last->pre->next = NULL;
+
+    //插入到表头
+    last->next = list->head;
+    last->pre = NULL;
+    list->head->pre = last;
+    list->head = last;
+}
+

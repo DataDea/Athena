@@ -95,9 +95,9 @@ listNode *listSearchKey(list *list, void *key);
 
 listNode *listIndex(list *list, long index);
 
-void listRewind(list *list, list_iterator *li);
+void listRewindHead(list *list, list_iterator *iterator);
 
-void listRewindTail(list *list, list_iterator *li);
+void listRewindTail(list *list, list_iterator *iterator);
 
 void listRotate(list *list);
 
