@@ -3,7 +3,10 @@
 #include "t_list/test_list/test_list.cpp"
 
 int main() {
-    list *ret = Test_listCreate();
-    printf("%lu", sizeof(*ret));
+
+//    list *ret = Test_listCreate();
+//    printf("%lu", sizeof(*ret));
+
+    Test_listRelease();
     return 0;
 }
