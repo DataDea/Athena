@@ -7,8 +7,8 @@
 #define ATHENA_LIST_H
 
 //常用的宏函数
-#define LIST_START_HEAD 0
-#define LIST_START_TAIL 1
+#define LIST_START_HEAD 1
+#define LIST_START_TAIL 0
 
 #define LIST_LENGTH(l) ((l)->lens)
 #define LIST_FIRST(l) ((l)->head)

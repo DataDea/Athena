@@ -185,7 +185,7 @@ list_iterator *listGetIterator(list *list, int direction) {
     if ((iterator = malloc(sizeof(*iterator))) == NULL) {
         return NULL;
     }
-    if (direction) {
+    if (direction > 0) {
         //从头
         iterator->direction = LIST_START_HEAD;
         iterator->next = list->head;
